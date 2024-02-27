@@ -225,7 +225,7 @@ wss.on('connection', function connection(ws) {
                 }
             })
             if (scoringTime) {
-                await pauseTrack(accessToken)
+                // await pauseTrack(accessToken)
                 clients.forEach((properties, id) => {
                     if (properties.state === 5) {
                         if (JSON.stringify(properties.answer) === JSON.stringify(selections["current track"])) {
