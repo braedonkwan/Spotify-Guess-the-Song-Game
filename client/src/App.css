@@ -1,0 +1,85 @@
+.component-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    gap: 10px;
+}
+
+.text-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 2rem;
+    text-align: center;
+    padding: 0 20px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    max-width: 500px;
+    box-sizing: border-box;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.label {
+    font-size: 1.2rem;
+}
+
+.input {
+    font-size: 1.2rem;
+    padding: 10px;
+    margin-top: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.button {
+    font-size: 1.2rem;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.selections-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    width: 90%;
+}
+
+.selection {
+    flex: 1 0 calc(50% - 20px);
+    cursor: pointer;
+    border: 2px solid #ccc;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 150px;
+}
+
+.scoreboard-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.scoreboard-table th,
+.scoreboard-table td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
