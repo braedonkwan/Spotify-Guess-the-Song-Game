@@ -194,10 +194,10 @@ wss.on('connection', function connection(ws) {
             }
         }
         else if (client.state === 3) {
-            data_recv = JSON.parse(message)
+            const dataRecv = JSON.parse(message)
             rounds = 1
-            maxRounds = data_recv["max rounds"]
-            playlist = await loadPlaylist(accessToken, data_recv["playlist ID"])
+            maxRounds = dataRecv["max rounds"]
+            playlist = await loadPlaylist(accessToken, dataRecv["playlist ID"])
             await nextTrack(accessToken)
             await sleep(500)
             selections = await songSelection(accessToken, playlist)
