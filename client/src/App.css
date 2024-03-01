@@ -14,9 +14,9 @@
 @media screen and (max-aspect-ratio: 1) {
     .game-container {
         width: 85vmin;
-        height: calc(85vmin * 2 / 3);
+        height: calc(85vmin * 3 / 2);
         overflow: hidden;
-        font-size: calc(85vmin * 2 / 3 / 32);
+        font-size: calc(85vmin / 32);
         position: absolute;
         top: 50%;
         left: 50%;
@@ -36,40 +36,76 @@
     background-color: rgb(234, 234, 234);
 }
 
-.short-input {
-    margin: 1%;
-    font-size: 0.7em;
-    text-align: center;
-    height: 4%;
-    width: 3%;
-    border-radius: 5px;
-    border: 2px solid black;
+@media screen and (min-aspect-ratio: 1) {
+    .short-input {
+        margin: 1%;
+        font-size: 1.4em;
+        text-align: center;
+        height: 8%;
+        width: 6%;
+        border-radius: 5px;
+        border: 2px solid black;
+    }
+
+    .long-input {
+        margin: 1%;
+        font-size: 1.4em;
+        text-align: center;
+        height: 8%;
+        width: 80%;
+        border: 2px solid black;
+        border-radius: 10px;
+    }
+
+    .button {
+        margin: 3%;
+        font-size: 2em;
+        height: 20%;
+        width: 60%;
+        cursor: pointer;
+        border: 3px solid black;
+        background-color: rgb(30, 135, 255);
+        font-weight: bold;
+        color: black;
+    }
 }
 
-.long-input {
-    margin: 1%;
-    font-size: 0.7em;
-    text-align: center;
-    height: 4%;
-    width: 40%;
-    border: 2px solid black;
-    border-radius: 10px;
+@media screen and (max-aspect-ratio: 1) {
+    .short-input {
+        margin: 1%;
+        font-size: 1.4em;
+        text-align: center;
+        height: calc(8% * 2 / 3);
+        width: calc(6% * 3 / 2);
+        border-radius: 5px;
+        border: 2px solid black;
+    }
+
+    .long-input {
+        margin: 1%;
+        font-size: 1.4em;
+        text-align: center;
+        height: calc(8% * 2 / 3);
+        width: 80%;
+        border: 2px solid black;
+        border-radius: 10px;
+    }
+
+    .button {
+        margin: 3%;
+        font-size: 2em;
+        height: calc(20% * 2 / 3);
+        width: 60%;
+        cursor: pointer;
+        border: 3px solid black;
+        background-color: rgb(30, 135, 255);
+        font-weight: bold;
+        color: black;
+    }
 }
 
 input[type='text']:focus {
     outline: none;
-}
-
-.button {
-    margin: 3%;
-    font-size: 1em;
-    height: 10%;
-    width: 30%;
-    cursor: pointer;
-    border: 3px solid black;
-    background-color: rgb(30, 135, 255);
-    font-weight: bold;
-    color: black;
 }
 
 .button:hover {
@@ -77,7 +113,7 @@ input[type='text']:focus {
 }
 
 .text-container {
-    font-size: 2em;
+    font-size: 3.5em;
     overflow-wrap: break-word;
     text-align: center;
 }
@@ -113,13 +149,13 @@ input[type='text']:focus {
     margin: 1%;
     overflow-wrap: break-word;
     text-align: center;
+    font-size: 1.6em;
 }
 
 .scoreboard {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    box-sizing: border-box;
     width: 100%;
     height: 100%;
     background-color: rgb(234, 234, 234);
@@ -135,4 +171,5 @@ input[type='text']:focus {
     border: 2px solid black;
     padding: 1%;
     text-align: left;
+    font-size: 1.2em;
 }
