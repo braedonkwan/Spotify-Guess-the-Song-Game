@@ -4,115 +4,114 @@ import './App.css'
 
 // UI components
 const GameState1 = ({ ws }) => {
-  const [username, setUsername] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  useEffect(() => {
-    setUsername('')
-    setIsSubmitting(false)
-  }, [])
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (username.trim()) {
+  const handleSubmit = () => {
+    const username = document.getElementById('username').value.trim()
+    if (username) {
       setIsSubmitting(true)
       ws.send(username)
     }
   }
   return (
-    <div className="component-container">
-      <form onSubmit={handleSubmit} className="form">
+    <div className='game-container'>
+      <div className='vertical'>
+        Username
         <input
-          type="text"
-          placeholder="Enter your username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          disabled={isSubmitting}
-          className="input"
+          id='username'
+          type='text'
+          className='long-input'
         />
-        <button type="submit" disabled={isSubmitting} className="button">
-          Submit
-        </button>
-      </form>
+        <input
+          type='button'
+          value='Submit'
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+          className='button'
+        />
+      </div>
     </div>
   )
 }
 const GameState2 = () => {
   return (
-    <div className="text-container">
-      Waiting for game leader to start the game
+    <div className='game-container'>
+      <div className='vertical'>
+        <div className='text-container'>Waiting for game leader to start the game...</div>
+      </div>
     </div>
   )
 }
 const GameState3 = ({ ws }) => {
   const [rounds, setRounds] = useState(null)
-  const [playlistId, setPlaylistId] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  useEffect(() => {
-    setRounds(null)
-    setPlaylistId('')
-    setIsSubmitting(false)
-  }, [])
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleRoundsChange = (e) => {
+    const rounds = e.target.value
+    if (/^([1-9][0-9]{0,2})?$/.test(rounds)) {
+      setRounds(rounds)
+    }
+  }
+  const handleSubmit = () => {
     const maxRounds = parseInt(rounds, 10)
-    if (!isNaN(maxRounds) && playlistId.trim()) {
+    const playlistID = document.getElementById('playlist').value.trim()
+    if (!isNaN(maxRounds) && playlistID) {
       setIsSubmitting(true)
-      const data = { "max rounds": maxRounds, "playlist ID": playlistId }
+      const data = { 'max rounds': maxRounds, 'playlist ID': playlistID }
       ws.send(JSON.stringify(data))
     }
   }
   return (
-    <div className="component-container">
-      <form onSubmit={handleSubmit} className="form">
-        <div className="input-group">
-          <label htmlFor="rounds" className="label">Number of Rounds:</label>
-          <input
-            id="rounds"
-            type="number"
-            value={rounds}
-            onChange={(e) => setRounds(e.target.value)}
-            min="1"
-            disabled={isSubmitting}
-            className="input"
-          />
-        </div>
-        <div className="input-group">
-          <label htmlFor="playlistId" className="label">Spotify Playlist ID:</label>
-          <input
-            id="playlistId"
-            type="text"
-            value={playlistId}
-            onChange={(e) => setPlaylistId(e.target.value)}
-            disabled={isSubmitting}
-            className="input"
-          />
-        </div>
-        <button type="submit" disabled={isSubmitting} className="button">Start Game</button>
-      </form>
+    <div className='game-container'>
+      <div className='vertical'>
+        Number of Rounds
+        <input
+          type='text'
+          value={rounds}
+          onChange={handleRoundsChange}
+          className='short-input'
+        />
+        Spotify Playlist ID
+        <input
+          id='playlist'
+          type='text'
+          className='long-input'
+        />
+        <input
+          type='button'
+          value='Start Game'
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+          className='button'
+        />
+      </div>
     </div>
   )
 }
 const GameState4 = ({ setGameState, ws, selections }) => {
   const [shuffledSelections, setShuffledSelections] = useState([])
+  const [isSubmitting, setIsSubmitting] = useState(false)
   useEffect(() => {
     const selectionsArray = Object.values(selections)
     const shuffled = selectionsArray.sort(() => 0.5 - Math.random())
     setShuffledSelections(shuffled)
-  }, [selections])
+  }, [])
   const handleClick = (selection) => {
-    ws.send(JSON.stringify(selection))
-    setGameState(5)
+    if (!isSubmitting) {
+      setIsSubmitting(true)
+      ws.send(JSON.stringify(selection))
+      setGameState(5)
+    }
   }
   return (
-    <div className="component-container">
-      <div className="selections-container">
+    <div className='game-container'>
+      <div className='grid'>
         {shuffledSelections.map((selection, index) => (
           <div
             key={index}
-            className="selection"
+            className='selection-box'
             onClick={() => handleClick(selection)}
           >
-            <div><strong>{selection.name}</strong></div>
-            <div>{selection.artists}</div>
+            <div className='selection'><strong>{selection.name}</strong></div>
+            <div className='selection'>{selection.artists}</div>
           </div>
         ))}
       </div>
@@ -121,30 +120,36 @@ const GameState4 = ({ setGameState, ws, selections }) => {
 }
 const GameState5 = () => {
   return (
-    <div className="text-container">
-      Waiting for other players to guess
+    <div className='game-container'>
+      <div className='vertical'>
+        <div className='text-container'>Waiting for other players to guess...</div>
+      </div>
     </div>
   )
 }
 const GameState6 = ({ scoreboard }) => {
   const sortedScores = Object.values(scoreboard).sort((a, b) => b.score - a.score)
   return (
-    <table className="scoreboard-table">
-      <thead>
-        <tr>
-          <th>Username</th>
-          <th>Score</th>
-        </tr>
-      </thead>
-      <tbody>
-        {sortedScores.map((entry, index) => (
-          <tr key={index}>
-            <td>{entry.username}</td>
-            <td>{entry.score}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <div className='game-container'>
+      <div className='scoreboard'>
+        <table className='scoreboard-table'>
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedScores.map((entry, index) => (
+              <tr key={index}>
+                <td>{entry.username}</td>
+                <td>{entry.score}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
   )
 }
 const GameState7 = ({ scoreboard }) => {
@@ -153,39 +158,40 @@ const GameState7 = ({ scoreboard }) => {
   }, [null, { score: -1 }])
   const { username, score } = winnerEntry[1]
   return (
-    <div className="text-container">
-      The winner is {username} with a score of {score}
+    <div className='game-container'>
+      <div className='vertical'>
+        <div className='text-container'>The winner is {username} with a score of {score}</div>
+      </div>
     </div>
   )
 }
 const GameState8 = ({ ws }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false)
-  useEffect(() => {
-    setIsButtonDisabled(false)
-  }, [])
   const handlePlayAgain = () => {
-    ws.send("play again")
+    ws.send('play again')
     setIsButtonDisabled(true)
   }
   const handleNewGame = () => {
-    ws.send("new game")
+    ws.send('new game')
     setIsButtonDisabled(true)
   }
   return (
-    <div className="component-container">
-      <div className="form">
-        <button
+    <div className='game-container'>
+      <div className='vertical'>
+        <input
+          type='button'
+          value='Play Again'
           onClick={handlePlayAgain}
           disabled={isButtonDisabled}
-          className="button">
-          Play Again
-        </button>
-        <button
+          className='button'
+        />
+        <input
+          type='button'
+          value='New Game'
           onClick={handleNewGame}
           disabled={isButtonDisabled}
-          className="button">
-          New Game
-        </button>
+          className='button'
+        />
       </div>
     </div>
   )
@@ -209,7 +215,7 @@ const App = () => {
       try {
         let parsedData = JSON.parse(message)
         setGameData(parsedData)
-        if (Object.keys(parsedData)[0] === "current track") {
+        if (Object.keys(parsedData)[0] === 'current track') {
           setGameState(4)
         } else {
           setGameState(6)

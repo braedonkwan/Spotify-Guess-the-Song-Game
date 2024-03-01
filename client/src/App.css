@@ -1,75 +1,128 @@
-.component-container {
+@media screen and (min-aspect-ratio: 1) {
+    .game-container {
+        width: calc(85vmin * 3 / 2);
+        height: 85vmin;
+        overflow: hidden;
+        font-size: calc(85vmin / 32);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
+@media screen and (max-aspect-ratio: 1) {
+    .game-container {
+        width: 85vmin;
+        height: calc(85vmin * 2 / 3);
+        overflow: hidden;
+        font-size: calc(85vmin * 2 / 3 / 32);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.vertical {
     display: flex;
+    border: 4px solid black;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    text-align: center;
-    gap: 10px;
-}
-
-.text-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    font-size: 2rem;
-    text-align: center;
-    padding: 0 20px;
-}
-
-.form {
-    display: flex;
-    flex-direction: column;
-    width: 80%;
-    max-width: 500px;
     box-sizing: border-box;
-}
-
-.input-group {
-    margin-bottom: 20px;
-}
-
-.label {
-    font-size: 1.2rem;
-}
-
-.input {
-    font-size: 1.2rem;
-    padding: 10px;
-    margin-top: 5px;
     width: 100%;
-    box-sizing: border-box;
+    height: 100%;
+    background-color: rgb(234, 234, 234);
+}
+
+.short-input {
+    margin: 1%;
+    font-size: 0.7em;
+    text-align: center;
+    height: 4%;
+    width: 3%;
+    border-radius: 5px;
+    border: 2px solid black;
+}
+
+.long-input {
+    margin: 1%;
+    font-size: 0.7em;
+    text-align: center;
+    height: 4%;
+    width: 40%;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+input[type='text']:focus {
+    outline: none;
 }
 
 .button {
-    font-size: 1.2rem;
-    padding: 10px;
-    width: 100%;
-    box-sizing: border-box;
+    margin: 3%;
+    font-size: 1em;
+    height: 10%;
+    width: 30%;
     cursor: pointer;
+    border: 3px solid black;
+    background-color: rgb(30, 135, 255);
+    font-weight: bold;
+    color: black;
 }
 
-.selections-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-    width: 90%;
+.button:hover {
+    background-color: rgb(30, 125, 255);
 }
 
-.selection {
-    flex: 1 0 calc(50% - 20px);
-    cursor: pointer;
-    border: 2px solid #ccc;
-    padding: 20px;
-    box-sizing: border-box;
+.text-container {
+    font-size: 2em;
+    overflow-wrap: break-word;
     text-align: center;
-    font-size: 1.2rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    width: 100%;
+    height: 100%;
+    border: 2px solid black;
+    box-sizing: border-box;
+}
+
+.selection-box {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: 150px;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    border: 2px solid black;
+    background-color: rgb(235, 235, 235);
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.selection-box:hover {
+    background-color: rgb(225, 225, 225);
+}
+
+.selection {
+    margin: 1%;
+    overflow-wrap: break-word;
+    text-align: center;
+}
+
+.scoreboard {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(234, 234, 234);
 }
 
 .scoreboard-table {
@@ -79,7 +132,7 @@
 
 .scoreboard-table th,
 .scoreboard-table td {
-    border: 1px solid black;
-    padding: 8px;
+    border: 2px solid black;
+    padding: 1%;
     text-align: left;
 }

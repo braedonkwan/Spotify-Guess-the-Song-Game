@@ -46,7 +46,7 @@ app.use(passport.session())
 
 // Request to Spotify server
 async function handleTokenRefresh() {
-    await new Promise(resolve => setTimeout(resolve, (expiresIn - 60) * 1000))
+    await sleep((expiresIn - 60) * 1000)
     try {
         const response = await axios.post('https://accounts.spotify.com/api/token', null, {
             params: {
@@ -128,25 +128,25 @@ function getRandomTrack(playlist) {
 
 async function songSelection(accessToken, playlist) {
     let selections = {
-        "current track": {},
-        "random track 1": {},
-        "random track 2": {},
-        "random track 3": {}
+        'current track': {},
+        'random track 1': {},
+        'random track 2': {},
+        'random track 3': {}
     }
     const currentTrack = await getCurrentTrack(accessToken)
     const pattern = /\s(?:\(feat\..*|\(with.*)/
-    selections["current track"] = {
-        "name": currentTrack.name.replace(pattern, ''),
-        "artists": currentTrack.artists.map(artist => artist.name).join(", ")
+    selections['current track'] = {
+        'name': currentTrack.name.replace(pattern, ''),
+        'artists': currentTrack.artists.map(artist => artist.name).join(', ')
     }
-    let trackIds = new Set([currentTrack.id])
+    const trackIds = new Set([currentTrack.id])
     while (trackIds.size < 4) {
-        let randomTrack = getRandomTrack(playlist)
+        const randomTrack = getRandomTrack(playlist)
         if (!trackIds.has(randomTrack.id)) {
             trackIds.add(randomTrack.id)
             selections[`random track ${trackIds.size - 1}`] = {
-                "name": randomTrack.name.replace(pattern, ''),
-                "artists": randomTrack.artists.map(artist => artist.name).join(", ")
+                'name': randomTrack.name.replace(pattern, ''),
+                'artists': randomTrack.artists.map(artist => artist.name).join(', ')
             }
         }
     }
@@ -162,8 +162,8 @@ function sleep(ms) {
 const server = http.createServer(app)
 const wss = new WebSocket.Server({ server })
 const clients = new Map()
-let scoreboard = {}
-let selections = {}
+let scoreboard
+let selections
 let playlist
 let rounds
 let maxRounds
@@ -175,29 +175,29 @@ wss.on('connection', function connection(ws) {
     const clientID = clientIDCounter++
     clients.set(clientID, {
         ws: ws,
-        username: "",
+        username: '',
         state: 1,
         gameleader: clientID === 0,
-        answer: "",
+        answer: '',
         answerTime: 0
     })
     ws.on('message', async function incoming(message) {
-        let client = clients.get(clientID)
+        const client = clients.get(clientID)
         if (client.state === 1) {
             client.username = message.toString()
             if (client.gameleader) {
                 client.state = 3
-                ws.send("state 3")
+                ws.send('state 3')
             } else {
                 client.state = 2
-                ws.send("state 2")
+                ws.send('state 2')
             }
         }
         else if (client.state === 3) {
             const dataRecv = JSON.parse(message)
             rounds = 1
-            maxRounds = dataRecv["max rounds"]
-            playlist = await loadPlaylist(accessToken, dataRecv["playlist ID"])
+            maxRounds = dataRecv['max rounds']
+            playlist = await loadPlaylist(accessToken, dataRecv['playlist ID'])
             await nextTrack(accessToken)
             await sleep(500)
             selections = await songSelection(accessToken, playlist)
@@ -206,8 +206,8 @@ wss.on('connection', function connection(ws) {
                 if (properties.state === 2 || properties.state === 3) {
                     properties.state = 4
                     scoreboard[id.toString()] = {
-                        "username": properties.username,
-                        "score": 0
+                        'username': properties.username,
+                        'score': 0
                     }
                     properties.ws.send(JSON.stringify(selections))
                 }
@@ -228,8 +228,8 @@ wss.on('connection', function connection(ws) {
                 // await pauseTrack(accessToken)
                 clients.forEach((properties, id) => {
                     if (properties.state === 5) {
-                        if (JSON.stringify(properties.answer) === JSON.stringify(selections["current track"])) {
-                            scoreboard[id.toString()]["score"] += (1000 - Math.round(Math.sqrt(properties.answerTime)))
+                        if (JSON.stringify(properties.answer) === JSON.stringify(selections['current track'])) {
+                            scoreboard[id.toString()]['score'] += (1000 - Math.round(Math.sqrt(properties.answerTime)))
                         }
                     }
                 })
@@ -244,14 +244,14 @@ wss.on('connection', function connection(ws) {
                     clients.forEach((properties) => {
                         if (properties.state === 6) {
                             properties.state = 7
-                            properties.ws.send("state 7")
+                            properties.ws.send('state 7')
                         }
                     })
                     await sleep(5000)
                     clients.forEach((properties) => {
                         if (properties.gameleader) {
                             properties.state = 8
-                            properties.ws.send("state 8")
+                            properties.ws.send('state 8')
                         }
                     })
                 } else {
@@ -270,7 +270,7 @@ wss.on('connection', function connection(ws) {
             }
         }
         else if (client.state === 8) {
-            if (message.toString() === "play again") {
+            if (message.toString() === 'play again') {
                 rounds = 1
                 await nextTrack(accessToken)
                 await sleep(500)
@@ -278,7 +278,7 @@ wss.on('connection', function connection(ws) {
                 clients.forEach((properties, id) => {
                     if (properties.state === 7 || properties.state === 8) {
                         properties.state = 4
-                        scoreboard[id.toString()]["score"] = 0
+                        scoreboard[id.toString()]['score'] = 0
                         properties.ws.send(JSON.stringify(selections))
                     }
                 })
@@ -288,7 +288,7 @@ wss.on('connection', function connection(ws) {
                 clients.forEach((properties, id) => {
                     if (properties.state === 7 || properties.state === 8) {
                         properties.state = 1
-                        properties.ws.send("state 1")
+                        properties.ws.send('state 1')
                     }
                 })
             }
