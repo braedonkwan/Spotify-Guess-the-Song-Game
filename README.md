@@ -64,3 +64,4 @@ your_lan_ip:8888/game
 # 📝 Notes
 - Ensure all players are on the same LAN as server for local multiplayer.
 - WebSocket URL in .env must match your local IP and port.
+- Spotify must be open on the device playing the music.
