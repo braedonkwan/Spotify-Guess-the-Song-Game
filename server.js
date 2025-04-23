@@ -315,7 +315,7 @@ wss.on('connection', ws => {
                     await sleep(500);
                     selections = await songSelection(playlist);
                     clients.forEach(c => {
-                        if (c.state === SCOREBOARD) {
+                        if (c.state === WAITING) {
                             c.state = SELECT_ANSWER;
                             c.ws.send(JSON.stringify(selections));
                         }
