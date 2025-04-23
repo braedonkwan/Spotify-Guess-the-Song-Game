@@ -150,27 +150,44 @@ const GameState5 = () => {
   );
 };
 
-const GameState6 = ({ scoreboard }) => {
+const GameState6 = ({ scoreboard, ws }) => {
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
   const sortedScores = Object.values(scoreboard).sort((a, b) => b.score - a.score);
+
+  const handleReady = () => {
+    ws.send('ready');
+    setIsButtonDisabled(true);
+  };
+
   return (
     <div className="game-container">
-      <div className="scoreboard">
-        <table className="scoreboard-table">
-          <thead>
-            <tr>
-              <th>Username</th>
-              <th>Score</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedScores.map((entry, index) => (
-              <tr key={index}>
-                <td>{entry.username}</td>
-                <td>{entry.score}</td>
+      <div className="vertical">
+        <div className="scoreboard">
+          <table className="scoreboard-table">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Score</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {sortedScores.map((entry, index) => (
+                <tr key={index}>
+                  <td>{entry.username}</td>
+                  <td>{entry.score}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <input
+          type="button"
+          value="Ready"
+          onClick={handleReady}
+          disabled={isButtonDisabled}
+          className="button"
+        />
       </div>
     </div>
   );
@@ -276,7 +293,7 @@ const App = () => {
       {gameState === 3 && <GameState3 ws={ws} playlists={gameData} />}
       {gameState === 4 && <GameState4 setGameState={setGameState} ws={ws} selections={gameData} />}
       {gameState === 5 && <GameState5 />}
-      {gameState === 6 && <GameState6 scoreboard={gameData} />}
+      {gameState === 6 && <GameState6 scoreboard={gameData} ws={ws} />}
       {gameState === 7 && <GameState7 scoreboard={gameData} />}
       {gameState === 8 && <GameState8 ws={ws} />}
     </div>

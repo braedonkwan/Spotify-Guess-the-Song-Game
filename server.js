@@ -264,6 +264,7 @@ wss.on('connection', ws => {
             maxRounds = cfg['max rounds'];
             playlist = await loadPlaylist(cfg['playlist ID']);
             await playPlaylist(cfg['playlist ID']);
+            await sleep(500);
             selections = await songSelection(playlist);
             scoreboard = {};
             clients.forEach((c, id) => {
@@ -294,9 +295,16 @@ wss.on('connection', ws => {
                         c.ws.send(JSON.stringify(scoreboard));
                     }
                 });
-                await sleep(10000);
+            }
+            return;
+        }
+
+        // SCOREBOARD
+        if (client.state === SCOREBOARD) {
+            client.state = WAITING
+            if ([...clients.values()].every(c => c.state !== SCOREBOARD)) {
                 if (rounds === maxRounds) {
-                    clients.forEach(c => { if (c.state === SCOREBOARD) { c.state = GAME_OVER; c.ws.send('state 7'); } });
+                    clients.forEach(c => { if (c.state === WAITING) { c.state = GAME_OVER; c.ws.send('state 7'); } });
                     await sleep(5000);
                     clients.forEach((c, id) => {
                         if (c.state === GAME_OVER && c.gameleader) { c.state = PLAY_AGAIN; c.ws.send('state 8'); }
